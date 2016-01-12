@@ -2,13 +2,46 @@
 
 var express = require('express');
 var router = express.Router();
+var path = require('path');
 var pg = require('pg');
 var connectionString = require(path.join(__dirname, '../', '../', 'config'));
-var path = require('path');
 var doingBizInd = ['gettingElectricity','startingBusiness', 'resolvingInsolvency', 'tradingAcrossBorders',
-'agg', 'gettingCredit', 'constructionPermit', 'enforcingContracts', 'payingTaxes', 'protectMinorities', 
+'agg', 'gettingCredit', 'construction', 'enforcingContracts', 'payingTaxes', 'protectMinorities', 
 'registerProperty'];
 
+var getTableById = function(client, table_id, full, callback){
+  var data = [];
+  //TODO: nicer string formatting in JS
+  queryString = (full) ? "SELECT * FROM doingbusiness_" : "SELECT country, year, rank, DTF FROM doingbusiness_";
+  queryString+=table_id;
+  console.log(queryString);
+  //Don't use callback for error handling because it loads the entire result into memory
+  var query = client.query(queryString);
+  query.on('error', function(err){
+    console.log(err);
+    callback(err);
+  });
+  query.on('row', function(row){
+    //console.log(data);
+    data.push(row);
+  });
+  query.on('end', function(result){
+    console.log("Data rows: ", data.length);
+    callback(null, data);
+  });
+}
+
+var aggTables = function(client, callback){
+  var full_results = {}
+  for(var i in doingBizInd){
+    getTableById(client, doingBizInd[i], false, function(err, result){
+      full_results[doingBizInd[i]]=result;
+    });
+  }
+  callback(full_results);
+}
+
+//Future: one GET route/endpoint per dataset (DBI, WGI, etc)
 /* GET home page. */
 router.get('/', function(req, res, next) {
   res.sendFile(path.join(__dirname,  '../', '../', 'client', 'views', 'index.html'));
@@ -16,10 +49,10 @@ router.get('/', function(req, res, next) {
 
 //Get all data
 //To-do: figure out query parameters as necessary
-router.get('/api/v1/doingbusiness/', function(req, res){
-  var results = {};
+router.get('/api/v1/doingbusiness', function(req, res){
+  var results={};
   //Get async pg client from pool
-  pg.connect(connectionString, function(err, client, done) {
+  pg.connect(connectionString, function(err, client) {
     // Handle connection errors
     if(err) {
       done();
@@ -27,48 +60,36 @@ router.get('/api/v1/doingbusiness/', function(req, res){
       return res.status(500).json({ success: false, data: err});
     }
     //Add results to data structure
-    for(table_id in doingBizInd){
-      getTableById(client, table_id, function(res){
-        results[table_id]=res;
-      })
-    }
-    done();
-    res.json(results);
-  });
-  pg.end();
-});
-
-router.get('/api/v1/doingbusiness/:table_id', function(req, res){
-  var table_id = req.query.table_id;
-  //Get async pg client from pool
-  pg.connect(connectionString, function(err, client, done) {
-    // Handle connection errors
-    if(err) {
-      done();
-      console.log(err);
-      return res.status(500).json({ success: false, data: err});
-    }
-    getTableById(client, table_id, function(res){
-      done();
-      res.json({table_id:results}); //singleton JSON
+    aggTables(client, function(err, full_results){
+      res.status(304).json(full_results); //{ table_name: [{row_property: value, ...}, { ... }], table_name2: [...]}
+      res.end();
     });
   });
   pg.end();
 });
 
-var getTableById = function(client, table_id, callback){
-  client.query("SELECT * FROM $1", [table_id], function(err, res){
-    //SQL Error
-    if(err){
-      done();
+router.get('/api/v1/doingbusiness/:table_id', function(req, res){
+  var table_id = req.params.table_id;
+  console.log(table_id);
+  //Check before helper function to prevent SQL injection
+  if(doingBizInd.indexOf(table_id)<0){
+    res.status(400).json({success: false, data: "No table found"}).end();
+  }
+  //Get async pg client from pool
+  pg.connect(connectionString, function(err, client) {
+    // Handle connection errors
+    if(err) {
       console.log(err);
+      return res.status(500).json({ success: false, data: err});
     }
-    query.on('end', function(){
-        callback(res);
-    })
-  })
-}
-//Future: one GET endpoint per dataset (DBI, WGI, etc)
+    getTableById(client, table_id, false, function(err, result){
+      var formattedResult = {};
+      formattedResult[table_id] = result;//singleton JSON
+      res.json(formattedResult); 
+    });
+  });
+  pg.end();
+});
 
 module.exports = router;
 

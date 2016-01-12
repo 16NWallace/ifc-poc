@@ -3,11 +3,10 @@ angular.module('ifc-poc', [])
 
 .controller('mainController', function($scope, $http) {
 
-    $scope.formData = {};
     $scope.ifcData = {};
 
-    // Get all todos
-    $http.get('/api/v1/todos')
+    Get all data
+    $http.get('/api/v1/doingbusiness')
         .success(function(data) {
             $scope.ifcData = data;
             console.log(data);
