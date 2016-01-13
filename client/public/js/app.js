@@ -3,9 +3,7 @@ angular.module('ifc-poc', [])
 
 .controller('mainController', function($scope, $http) {
 
-    $scope.ifcData = {};
-
-    Get all data
+    //Get all data
     $http.get('/api/v1/doingbusiness')
         .success(function(data) {
             $scope.ifcData = data;

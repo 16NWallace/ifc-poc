@@ -55,7 +55,6 @@ router.get('/api/v1/doingbusiness', function(req, res){
   pg.connect(connectionString, function(err, client) {
     // Handle connection errors
     if(err) {
-      done();
       console.log(err);
       return res.status(500).json({ success: false, data: err});
     }
