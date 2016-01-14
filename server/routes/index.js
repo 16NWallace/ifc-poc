@@ -12,8 +12,8 @@ var doingBizInd = ['gettingElectricity','startingBusiness', 'resolvingInsolvency
 var getTableById = function(client, table_id, full, callback){
   var data = [];
   //TODO: nicer string formatting in JS
-  queryString = (full) ? "SELECT * FROM doingbusiness_" : "SELECT country, year, rank, DTF FROM doingbusiness_";
-  queryString+=table_id;
+  queryString = (full) ? "SELECT * FROM dbi_" : "SELECT country, isoa2, continent, year, rank, DTF FROM dbi_";
+  queryString+=(table_id);
   console.log(queryString);
   //Don't use callback for error handling because it loads the entire result into memory
   var query = client.query(queryString);
