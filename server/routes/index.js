@@ -67,6 +67,7 @@ router.get('/api/v1/doingbusiness', function(req, res){
   pg.end();
 });
 
+//Use table id  'agg' for overall rankings
 router.get('/api/v1/doingbusiness/:table_id', function(req, res){
   var table_id = req.params.table_id;
   console.log(table_id);
@@ -83,6 +84,7 @@ router.get('/api/v1/doingbusiness/:table_id', function(req, res){
     }
     getTableById(client, table_id, false, function(err, result){
       var formattedResult = {};
+      }
       formattedResult[table_id] = result;//singleton JSON
       res.json(formattedResult); 
     });
