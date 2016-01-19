@@ -14,6 +14,7 @@ var getTableById = function(client, table_id, full, callback){
   //TODO: nicer string formatting in JS
   queryString = (full) ? "SELECT * FROM dbi_" : "SELECT country, isoa2, continent, year, rank, DTF FROM dbi_";
   queryString+=(table_id);
+  queryString+=" WHERE year=2016";
   console.log(queryString);
   //Don't use callback for error handling because it loads the entire result into memory
   var query = client.query(queryString);
@@ -23,12 +24,25 @@ var getTableById = function(client, table_id, full, callback){
   });
   query.on('row', function(row){
     //console.log(data);
-    data.push(row);
+    formatData(row, function(formattedRow){
+      data.push(formattedRow);
+    });
   });
   query.on('end', function(result){
     console.log("Data rows: ", data.length);
     callback(null, data);
   });
+}
+
+//TODO: refactor for general tables, not just agg
+var formatData = function(row, callback){
+  if(row.rank!=".."){
+    row.rank = parseInt(row.rank);
+  }
+  if(row.dtf!=".."){
+    row.dtf = parseFloat(row.dtf);
+  }
+  callback(row);
 }
 
 var aggTables = function(client, callback){
@@ -84,7 +98,6 @@ router.get('/api/v1/doingbusiness/:table_id', function(req, res){
     }
     getTableById(client, table_id, false, function(err, result){
       var formattedResult = {};
-      }
       formattedResult[table_id] = result;//singleton JSON
       res.json(formattedResult); 
     });

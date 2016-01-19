@@ -1,4 +1,4 @@
-//Pulled directly from DRE
+//Pulled directly from DRE for tooltip/sizing
 
 'use strict';
 
