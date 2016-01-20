@@ -6,13 +6,10 @@
     <link href="http://netdna.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" rel="stylesheet" media="screen">
   </head>
 
-  <body>
+  <body ng-app="ifcPoc" ng-controller="mainController">
     <!--working in controller-->
-    <div id="heatmap" ng-app="ifcPoc" ng-controller="mainController"></div>
-    <!--viz not working as directive-->
+    <!--div id="heatmap"-->
     <viz-map ifc-data="ifcData" geo-Data="geoData">vizMap directive line</viz-map>
-    <!--test directive not working either-->
-    <brush-timeline foo="1,2,3,4,5"></brush-timeline>
 
     <!--TODO: add all script dependencies-->
     <script src="http://code.jquery.com/jquery-1.11.2.min.js" type="text/javascript"></script>
@@ -21,9 +18,9 @@
     <script src="//d3js.org/d3.v3.min.js" type="text/javascript"></script>
     <script src="//d3js.org/topojson.v1.min.js" type="text/javascript"></script>
     <script src="https://cdn.rawgit.com/alexandersimoes/d3plus/master/d3plus.js" type="text/javascript"></script>
+    <script src="js/app.js" type="text/javascript"></script>
     <script src="js/directives/vizMap.js" type="text/javascript"></script>
     <script src="js/directives/brush-timeline.js" type="text/javascript"></script>
-    <script src="js/app.js" type="text/javascript"></script>
     <!--try with JSON.parse-->
     <!--script src="world110-m2.json" type="text/json"-->
   </body>

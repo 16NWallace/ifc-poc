@@ -1,7 +1,7 @@
 //ANGULAR APP
-angular.module('ifcPoc', [])
+var app = angular.module('ifcPoc', []);
 
-.controller('mainController', ["$scope", "$http", function($scope, $http) {
+app.controller('mainController', ["$scope", "$http", function($scope, $http) {
 
   //Get agg data
   $http.get('/api/v1/doingbusiness/agg')
@@ -12,17 +12,17 @@ angular.module('ifcPoc', [])
           .success(function(geo_data){
             $scope.geoData = geo_data;
             console.log($scope.geoData);
-            d3plus.viz()
-              .container("#heatmap")        
-              .data($scope.ifcData.agg)        
-              .coords($scope.geoData) 
-              .type("geo_map")
-              .legend({"value": true})       
-              .id("isoa2")          
-              .text("country")             
-              .color({"heatmap":["red","blue"],"value":"rank"})          
-              .tooltip(["country", "rank","dtf"])      
-              .draw()  
+            // d3plus.viz()
+            //   .container("#heatmap")        
+            //   .data($scope.ifcData.agg)        
+            //   .coords($scope.geoData) 
+            //   .type("geo_map")
+            //   .legend({"value": true})       
+            //   .id("isoa2")          
+            //   .text("country")             
+            //   .color({"heatmap":["red","blue"],"value":"rank"})          
+            //   .tooltip(["country", "rank","dtf"])      
+            //   .draw()  
           })
           .error(function(err){
             console.log("ERROR FROM GET");

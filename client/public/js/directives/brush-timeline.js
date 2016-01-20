@@ -1,6 +1,6 @@
 //Example: http://bl.ocks.org/mbostock/1667367
 
-angular.module('ifcPoc',[])
+angular.module('ifcPoc')
   .directive('brushTimeline', function($window){
     console.log("in test directive!")
     return {
