@@ -1,19 +1,19 @@
 //ANGULAR APP
-angular.module('ifc-poc', [])
+angular.module('ifcPoc', [])
 
 .controller('mainController', ["$scope", "$http", function($scope, $http) {
 
   //Get agg data
   $http.get('/api/v1/doingbusiness/agg')
-      .success(function(data) {
-        $scope.ifcData = data;
-        console.log(data);
+      .success(function(ifc_data) {
+        $scope.ifcData = ifc_data;
+        console.log($scope.ifcData);
         $http.get("world110-m3.json")
-          .success(function(data){
-            $scope.geoData = data;
+          .success(function(geo_data){
+            $scope.geoData = geo_data;
             console.log($scope.geoData);
             d3plus.viz()
-              .container("#vizzz")        
+              .container("#heatmap")        
               .data($scope.ifcData.agg)        
               .coords($scope.geoData) 
               .type("geo_map")
@@ -32,7 +32,7 @@ angular.module('ifc-poc', [])
       .error(function(err) {
         console.log(err);
       });
-    });
+    }]);
 
   // $scope.ifcData = [
   //   {"country":"Zimbabwe","isoa2":"ZW","continent":"AF","year":"2016","rank":"184","dtf":"31.67"},

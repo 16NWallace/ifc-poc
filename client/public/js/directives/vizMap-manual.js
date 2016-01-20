@@ -1,3 +1,5 @@
+//DEPRECATED: USE D3PLUS TO MAKE NICE, EASY GEOMAP
+
       link: function makeMap(scope, element, attrs){
          //Color heatmap by overall DBI ranking 
         var color = d3.scale.log()

@@ -9,6 +9,8 @@ angular.module('ifc-poc', [])
       scope: {ifcData: '=', dims: '='}, //dims is which DBI ranks to include
       link: function drawParallelCoordinates(scope, element, attrs){
         var axes = scope.dims; //[gettingCredit, tradingAcrossBorders, etc]
+
+        //IMPLEMENT LATER
       }
     }
   });
