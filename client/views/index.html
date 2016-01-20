@@ -7,10 +7,27 @@
   </head>
 
   <body ng-app="ifcPoc" ng-controller="mainController">
-    <!--working in controller-->
-    <!--div id="heatmap"-->
-    <viz-map ifc-data="ifcData" geo-Data="geoData">vizMap directive line</viz-map>
-
+    <div class="col-md-12">
+        <rd-widget>
+            <rd-widget-header icon="fa fa-globe" title="Map"></rd-widget-header>
+            <rd-widget-body classes="medium no-padding">
+            </rd-widget-body>
+        </rd-widget>
+    </div>
+    <div class="row-fluid" id="queryParams">
+      <div class="dropdown multi-column">
+        <div class="span6">
+         Select country: <select ng-model="countrySelected" ng-options="country as country.name for country in countries track by country.isoa2"> </select>
+        </div>
+        <div class="span6">
+          Select question: <select ng-model="questionSelected" ng-options="question as question.qid for question in questions"></select>
+        </div>
+      </div>
+    </div>
+    <div class="row-fluid">
+      Enter custom query: <input ng-model="mapQuery"></input>
+    </div>
+    <viz-map ifc-data="ifcData" geo-Data="geoData"></viz-map>
     <!--TODO: add all script dependencies-->
     <script src="http://code.jquery.com/jquery-1.11.2.min.js" type="text/javascript"></script>
     <script src="http://netdna.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js" type="text/javascript"></script>
@@ -21,7 +38,5 @@
     <script src="js/app.js" type="text/javascript"></script>
     <script src="js/directives/vizMap.js" type="text/javascript"></script>
     <script src="js/directives/brush-timeline.js" type="text/javascript"></script>
-    <!--try with JSON.parse-->
-    <!--script src="world110-m2.json" type="text/json"-->
   </body>
 </html>

@@ -11,7 +11,7 @@ angular.module('ifcPoc')
       scope: {ifcData:'=', geoData:'='},
       //scope: false,
       //d3 code for map here
-      template: "<svg width='850' height='200'></svg>",
+      template: "<svg style='width:100%;'></svg>",
       link: function postLink(scope, element, attrs){
         //var d3 = $window.d3;
         console.log("IN LINK FUNCTION");
@@ -30,8 +30,9 @@ angular.module('ifcPoc')
               .coords(scope.geoData) 
               .type("geo_map") 
               .legend({"value": true})        
-              .id("isoa2")          
-              .text({"value":"country", "mute":["Mozambique, Armenia, South Africa"])             
+              .id("isoa2")
+               //hack to get around improperly sized names                
+              .text({"value":"country"})      
               .color({"heatmap":["red","blue"],"value":"rank"})          
               .tooltip(["country", "rank","dtf"])        
               .draw(); 
