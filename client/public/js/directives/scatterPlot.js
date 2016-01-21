@@ -18,7 +18,7 @@ angular.module('ifc-poc', [])
           .id("isoa2")          
           .text("country")             
           .color({"value":"continent"})          
-          .tooltip(["country", "population"])        
+          .tooltip(["country", "population"])  //TODO: make table in pg with basic data (pop'l, GDP, etc.)      
           .draw()  
       }
     }
