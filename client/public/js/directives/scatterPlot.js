@@ -1,6 +1,6 @@
 //TODO: add animation for time points, join population/GDP/basic info table to scope
 
-angular.module('ifc-poc', [])
+angular.module('ifc-poc')
   //figure out services/params needed
   .directive('scatterPlot', function($window){
     return {

@@ -61,7 +61,7 @@ var aggTables = function(client, callback){
 //Future: one GET route/endpoint per dataset (DBI, WGI, etc)
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.sendFile(path.join(__dirname,  '../', '../', 'client', 'views', 'index.html'));
+  res.sendFile(path.join(__dirname,  '../', '../', 'client', 'public', 'views', 'index.html'));
 });
 
 //Get all data
