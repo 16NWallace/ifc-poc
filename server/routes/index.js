@@ -14,7 +14,7 @@ var getTableById = function(client, table_id, full, callback){
   //TODO: nicer string formatting in JS
   queryString = (full) ? "SELECT * FROM dbi_" : "SELECT country, isoa2, continent, year, rank, DTF FROM dbi_";
   queryString+=(table_id);
-  queryString+=" WHERE year=2016";
+  //queryString+=" WHERE year=2016";
   console.log(queryString);
   //Don't use callback for error handling because it loads the entire result into memory
   var query = client.query(queryString);
@@ -41,6 +41,9 @@ var formatData = function(row, callback){
   }
   if(row.dtf!=".."){
     row.dtf = parseFloat(row.dtf);
+  }
+  if(row.year!=".."){
+    row.year = parseInt(row.year);
   }
   callback(row);
 }

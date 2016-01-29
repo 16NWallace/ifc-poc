@@ -5,35 +5,23 @@
 angular.module('ifcPoc')
   //figure out services/params needed
   .directive('vizMap', function($window){
-    console.log("in directive");
     return {
-      restrict: 'E',
+      restrict: 'EA',
       scope: {
-        ifcData:'=', 
-        geoData:'=',
-        countries: '&', 
-        questions: '&', 
-        params: '&'
-      },
+        vizData: '=',
+        geoData: '='
+      }, //try w/o scope
       //d3 code for map here
-      template: "<svg style='width:100%;'></svg>",
+      templateUrl: "<svg style='width:100%;'></svg>",
       link: function postLink(scope, element, attrs){
-        //var d3 = $window.d3;
-        console.log("IN LINK FUNCTION");
-        console.log(Object.keys(scope));
-        
         //Same digest cycle workflow as DRE
-        var ifcData = [];
+        var plotData = [];
         var geoData = [];
         var filterParams = {};
 
         //D3Plus mute/solo to select certain data points
         var soloData = [];
-        var muteData = [];
-
-        function parseQuery(queryString){
-          var queryRegex = /()*/;
-        }
+        var muteData = ["AM"];
 
         function applyFilters(){
           var queryParams = parseQuery(filterParams.mapQuery);
@@ -57,13 +45,18 @@ angular.module('ifcPoc')
           try{
             d3plus.viz()
               .container(d3selectContainer)     
-              .data(ifcData)        
-              .coords(geoData) 
+              .data(plotData)        
+              .coords({
+                "value":geoData,
+                "center":[10,0]
+              }) 
               .type("geo_map") 
               .legend({"value": true})        
               .id("isoa2", {"mute": muteData})     //https://github.com/alexandersimoes/d3plus/wiki/Data-Filtering#mute        
-              .text({"value":"country"})      
-              .color({"heatmap":["blue","red"],"value":"rank"})          
+              .text({"value":"country"})
+              .time({"value":"year", "solo":2016}) 
+              .timeline(true)     
+              .color("rank")          
               .tooltip(["country", "rank","dtf"])        
               .draw(); 
           } catch (e) {
@@ -74,13 +67,13 @@ angular.module('ifcPoc')
         
         //If either ifcData or geoData is updated - both needed for viz, geoData only loaded once
         scope.$watchGroup(['ifcData','geoData'], function(newVals, oldVals){
-          ifcData = newVals[0].agg; //put values in local variable
+          plotData = newVals[0].agg; //put values in local variable
           geoData = newVals[1];
           //applyFilters();
           renderMap();
         }); 
 
-        scope.$watch('params', function(newVal, oldVal){
+        scope.$watch('filterParams', function(newVal, oldVal){
           filterParams = newVal;
           //applyFilters();
           renderMap();

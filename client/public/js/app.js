@@ -3,6 +3,12 @@
 angular.module('ifcPoc', [])
   .controller('mainController', ["$scope", "$http", function($scope, $http) {
 
+    function bindIndabaData(res){
+      res.forEach(function(survey_entry){
+        
+      });
+    }
+
     //Get agg data
     $http.get('/api/v1/doingbusiness/agg')
       .success(function(ifc_data) {
@@ -12,18 +18,7 @@ angular.module('ifcPoc', [])
         $http.get("world110-m3.json")
           .success(function(geo_data){
             $scope.geoData = geo_data;
-            console.log($scope.geoData);
-          //   d3plus.viz()
-          //     .container("#heatmap")        
-          //     .data($scope.ifcData.agg)        
-          //     .coords($scope.geoData) 
-          //     .type("geo_map")
-          //     .legend({"value": true})       
-          //     .id("isoa2")          
-          //     .text("country")             
-          //     .color({"heatmap":["red","blue"],"value":"rank"})          
-          //     .tooltip(["country", "rank","dtf"])      
-          //     .draw()  
+            console.log($scope.geoData); 
           })
           .error(function(err){
             console.log(err);
@@ -33,7 +28,39 @@ angular.module('ifcPoc', [])
         console.log(err);
       });
     //Hard-coded data for dropdown testing
-    $scope.countries = [
+
+    $scope.continents = [
+      {
+        "name":"Africa",
+        "isoa2":"AF"
+      },
+      {
+        "name":"Europe",
+        "isoa2":"EU"
+      },
+      {
+        "name":"North America",
+        "isoa2":"NA"
+      },
+      {
+        "name":"Asia",
+        "isoa2":"AS",
+      },
+      {
+        "name":"South America",
+        "isoa2":"SA"
+      },
+      {
+        "name":"Australia",
+        "isoa2":"AU"
+      },
+      {
+        "name":"Antartica",
+        "isoa2":"AQ"
+      }
+    ]
+
+    $scope.topics = [
       {
         "name":"Algeria",
         "isoa2":"AZ"
@@ -43,6 +70,22 @@ angular.module('ifcPoc', [])
         "isoa2":"AF"
       }, 
     ];
+
+    $scope.subtopics = [
+      {
+        "id":"3333",
+        "name":"Income"
+      },
+      {
+        "id":"424",
+        "name":"Region"
+      },
+      {
+        "id":"111",
+        "name":"Continent"
+      }
+    ];
+
     $scope.questions = [
       {
         "qid":"1234",
@@ -54,13 +97,5 @@ angular.module('ifcPoc', [])
       }
     ];
   }]);
-
-  //Front-end testing
-  // $scope.ifcData = [
-  //   {"country":"Zimbabwe","isoa2":"ZW","continent":"AF","year":"2016","rank":"184","dtf":"31.67"},
-  //   {"country":"Algeria","isoa2":"DZ","continent":"AF","year":"2016","rank":"120","dtf":"20"},
-  //   {"country":"Ukraine", "isoa2":"UA", "continent":"EU", "year":"2016","rank":"35","dtf":"13.2"}
-  // ];
-  //console.log($scope.ifcData);
 
 
