@@ -171,10 +171,10 @@ angular.module('ifcPoc')
                 "center":[10,0]
               }) 
               .type("geo_map") 
-              .legend({"value": true})        
+              //.legend({"value": true})        
               .id("isoa2")     //https://github.com/alexandersimoes/d3plus/wiki/Data-Filtering#mute        
               .text({"value":"country"})
-              .time({"value":"year", "solo":2016}) 
+              //.time({"value":"year", "solo":2016}) 
               .timeline(true)     
               .color("rank")          
               .tooltip(["country", "rank","dtf"])        

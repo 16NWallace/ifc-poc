@@ -9,10 +9,11 @@ angular.module('ifcPoc')
       templateUrl: "../views/parallel-coords.html", 
       link: function drawParallelCoordinates(scope, element, attrs){
 
-        var request = $http.get('api/v1/doing/business/ranks_all')
+        var request = $http.get('api/v1/doingbusiness/ranks_all')
           .success(function(ranks_data){
-            scope.ranksData = ranks_data;
-            scope.axes = getAxes(rank_data[0]);
+            scope.ranksData = ranks_data.ranks_all;
+            console.log(scope.ranksData);
+            scope.axes = getAxes(scope.ranksData[0]);
           })
           .error(function(err){
             console.log(err);
@@ -21,7 +22,7 @@ angular.module('ifcPoc')
         function getAxes(dataRowObj){
           var axes = [];
           var idKeys = ['country','year','isoa2','continent'];
-          for(var key: dataRowObj.keys){
+          for(var key in dataRowObj.keys){
             if(idKeys.indexOf(key)<0){
               axes.push(key);
             } 
@@ -31,7 +32,8 @@ angular.module('ifcPoc')
 
         function drawParallelCoords(){
           var plotData = scope.ranksData;
-          var axes = scope.axes;
+          //var axes = scope.axes;
+          var axes = ['rank', 'construction_rank', 'enforce_rank', 'credit_rank', 'business_rank', 'trade_rank'];
           var margin = {top: 30, right: 10, bottom: 10, left: 10},
           width = 960 - margin.left - margin.right,
           height = 500 - margin.top - margin.bottom;
@@ -52,6 +54,7 @@ angular.module('ifcPoc')
               .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
           //Make scale for each axis
+          var dimensions;
           x.domain(dimensions=axes.filter(function(d){
             var idKeys = ['country','year','isoa2','continent'];
             return idKeys.indexOf(d)<0 && 
@@ -86,6 +89,7 @@ angular.module('ifcPoc')
                 return extents[i][0] <= d[p] && d[p] <= extents[i][1];
               }) ? null : "none";
             });
+          }
 
           //Draw lines in grey when not highlighted
           background = svg.append("g")
@@ -121,7 +125,7 @@ angular.module('ifcPoc')
             .attr("class", "dimension")
             .attr("transform", function(d){ return "translate(" + x(d) + ")"; })
             .call(d3.behavior.drag()
-              .origin(function(d) { return x: x(d) })
+              .origin(function(d) { return {x: x(d)}; })
               .on("dragstart", function(d){
                 dragging[d] = x(d);
                 background.attr("visibility","hidden")
@@ -162,6 +166,13 @@ angular.module('ifcPoc')
         .selectAll("rect")
           .attr("x", -8)
           .attr("width", 16);
+        }
+
+        scope.$watchGroup(['ranksData','axes'], function(newVal, oldVal){
+          if(newVal!==oldVal){
+            drawParallelCoords();
+          }
+        });
       }
     }
   });

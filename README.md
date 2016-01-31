@@ -24,5 +24,6 @@ Each axis of this parallel coordinates diagram is the rank of the Doing Business
 
 ##Runing the app
 
-Go to root directory and `npm install`. Modify `config.js` file to have location of Postrgres database. Then start the server, which will be serving on `localhost:3000`.
+Go to root directory and `npm install`. Modify `config.js` file to have location of Postrgres database. Then start the server, which will be serving on `localhost:3000`. Start configurations are set in `package.json` as `node bin/www`. To run:
+
 ```npm start```
