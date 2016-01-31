@@ -7,7 +7,7 @@ var pg = require('pg');
 var connectionString = require(path.join(__dirname, '../', '../', 'config'));
 var doingBizInd = ['gettingElectricity','startingBusiness', 'resolvingInsolvency', 'tradingAcrossBorders',
 'agg', 'gettingCredit', 'construction', 'enforcingContracts', 'payingTaxes', 'protectMinorities', 
-'registerProperty'];
+'registerProperty', 'ranks_all'];
 
 var getTableById = function(client, table_id, full, callback){
   var data = [];
@@ -92,6 +92,8 @@ router.get('/api/v1/doingbusiness/:table_id', function(req, res){
   if(doingBizInd.indexOf(table_id)<0){
     res.status(400).json({success: false, data: "No table found"}).end();
   }
+
+  var allCols = (table_id==='ranks_all');
   //Get async pg client from pool
   pg.connect(connectionString, function(err, client) {
     // Handle connection errors
@@ -99,7 +101,7 @@ router.get('/api/v1/doingbusiness/:table_id', function(req, res){
       console.log(err);
       return res.status(500).json({ success: false, data: err});
     }
-    getTableById(client, table_id, false, function(err, result){
+    getTableById(client, table_id, allCols, function(err, result){
       var formattedResult = {};
       formattedResult[table_id] = result;//singleton JSON
       res.json(formattedResult); 
