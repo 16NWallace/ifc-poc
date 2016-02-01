@@ -1,0 +1,34 @@
+<ng-form class="form-inline" name="filterParams">
+  <div class="form-group">
+    <label for="topicdropdown"> Topic </label>
+    <select class="form-control" id="topicDropdown" ng-model="filterParams.topicSelected" ng-options="topic as topic.name for topic in topics track by topic.isoa2">
+    <option value="topic">--Choose topic--</option></select>
+  </div>
+  <div class="form-group">
+    <label for="topicDropdown"> Subtopic </label>
+    <select class="form-control" id="subtopicDropdown" ng-model="filterParams.subtopicSelected" ng-options="st as st.name for st in subtopics track by st.id"><option value="st">--Choose subtopic--</option>
+    </select>
+  </div>
+  <div ng-show="filterParams.subtopicSelected.name == 'Continent'" class="form-group ng-hide">
+    <label for="continentDropdown"> Continent </label>
+    <select class="form-control" id="continentDropdown" ng-model="filterParams.subtopicSelected.continent" ng-options="ct as ct.name for ct in continents track by ct.isoa2"><option value="ct">--Choose continent--</option>
+    </select> 
+  </div>
+  <div ng-show="filterParams.subtopicSelected.name == 'Income'" class="form-group ng-hide">
+    <label for="incomeDropdown"> Income </label>
+    <select class="form-control" id="continentDropdown" ng-model="filterParams.subtopicSelected.category" ng-options="lvl as lvl.name for lvl in incomeLevels"><option value="ct">--Choose continent--</option>
+    </select> 
+  </div>
+  <div class="form-group">
+    <label for="questionDropdown"> Question </label>
+    <select class="form-control" ng-model="filterParams.questionSelected" ng-options="question as question.qid for question in questions" id="questionDropdown" placeholder="Question..."><option value="">Question id</option></select>
+  </div>
+  <div class="form-group">
+    <label for="mapQueryInput"> Custom Query: </label>
+    <input class="form-control" placeholder="question1:yes" ng-model="filterParams.mapQuery" id="mapQueryInput"></input>
+  </div>
+  <button type="submit" class="btn btn-default" ng-click="drawMap()">Submit</button>
+</ng-form>
+<div id="mapViz"></div>
+
+
