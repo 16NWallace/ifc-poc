@@ -1,6 +1,7 @@
 'use strict';
 //Parallel coordinates with brushable axes: http://bl.ocks.org/jasondavies/1341281
 //Unstable, but could be used later - https://github.com/syntagmatic/parallel-coordinates
+//Example with color-grouping and legend: http://bl.ocks.org/syntagmatic/3150059
 
 angular.module('ifcPoc')
   .directive('parallelCoordinates', function ($window, $http){
@@ -40,7 +41,8 @@ angular.module('ifcPoc')
 
           var x = d3.scale.ordinal().rangePoints([0, width], 1),
               y = {},
-              dragging = {};
+              dragging = {},
+              includedGroups=[]; //for continents by legend
 
           var line = d3.svg.line(),
               axis = d3.svg.axis().orient("left"),
@@ -91,6 +93,44 @@ angular.module('ifcPoc')
             });
           }
 
+          var continents = ["AF","AS","AU","EU","NA","SA","AQ"];
+          var color = d3.scale.ordinal()
+            .domain(continents)
+            .range(["red","green","blue","yellow","purple","orange","darkcyan"]);
+
+          function create_legend(){
+            var legend_data = d3.select("#legend")
+              .html("")
+              .selectAll(".row")
+              .data(_.keys(color).sort());
+
+            var legend = legend_data
+              .enter().append("div")
+              .attr("title", "Continents")
+              .on("click", function(d){
+                //de-select
+                if(_.contains(includedGroups, d)){
+                  d3.select(this).attr("title", "Remove filter");
+                  includedGroups = _.difference(includedGroups, [d]);
+                //select
+                } else {
+                  includedGroups.push(d);
+                  brush();
+                }
+              });
+
+            legend
+              .append("span")
+              .style("background", function(d,i) { return color(d,0.85)})
+              .attr("class", "color-bar"); 
+
+            legend
+              .append("span")
+              .text(function(d,i) { return " " + d});
+
+            return legend;
+          }
+
           //Draw lines in grey when not highlighted
           background = svg.append("g")
             .attr("class", "background")
@@ -100,10 +140,6 @@ angular.module('ifcPoc')
             .attr("d", path);
 
           //Add colored foreground lines when highlighted
-          var color = d3.scale.ordinal()
-            .domain(["AF","AS","AU","EU","NA","SA","AQ"])
-            .range(["red","green","blue","yellow","purple","orange","darkcyan"]);
-
           foreground = svg.append("g")
             .attr("class", "foreground")
           .selectAll("path")
